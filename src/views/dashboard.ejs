@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Dashboard - Todo App</title>
+</head>
+<body>
+    <h1>Dashboard - <%= username %></h1>
+
+    <!-- Create Task (Requirement 2) -->
+    <form action="/tasks" method="POST">
+        <input type="text" name="title" placeholder="New task" required>
+        <button type="submit">Add Task</button>
+    </form>
+
+    <!-- Active Tasks List (Requirements 3, 4, 5, 6) -->
+    <h2>Active Tasks</h2>
+    <ul>
+        <% if (tasks && tasks.length) { %>
+            <% tasks.forEach(function(task, index) { %>
+                <li>
+                    <span><%= task.title %></span>
+                    <span><%= task.completed ? "(Done)" : "" %></span>
+
+                    <!-- Edit (Requirement 3) -->
+                    <form action="/tasks/<%= task.id %>/edit" method="POST" style="display:inline;">
+                        <input type="text" name="title" value="<%= task.title %>" required>
+                        <button type="submit">Edit</button>
+                    </form>
+
+                    <!-- Delete (Requirement 4) -->
+                    <form action="/tasks/<%= task.id %>/delete" method="POST" style="display:inline;">
+                        <button type="submit">Delete</button>
+                    </form>
+
+                    <!-- Toggle Done (Requirement 5) -->
+                    <form action="/tasks/<%= task.id %>/toggle" method="POST" style="display:inline;">
+                        <button type="submit"><%= task.completed ? "Mark Undone" : "Mark Done" %></button>
+                    </form>
+
+                    <!-- Toggle Archived -->
+                    <form action="/tasks/<%= task.id %>/archive" method="POST" style="display:inline;">
+                        <button type="submit">Archive</button>
+                    </form>
+                    <!-- Reorder Up/Down (Requirement 6) -->
+                    <form action="/tasks/<%= task.id %>/move-up" method="POST" style="display:inline;">
+                        <button type="submit" <%= index === 0 ? "disabled" : "" %>>Up</button>
+                    </form>
+                    <form action="/tasks/<%= task.id %>/move-down" method="POST" style="display:inline;">
+                        <button type="submit" <%= index === tasks.length - 1 ? "disabled" : "" %>>Down</button>
+                    </form>
+                </li>
+            <% }); %>
+        <% } else { %>
+            <li>No active tasks.</li>
+        <% } %>
+    </ul>
+
+    <!-- Archive All Completed (Requirement 7) -->
+    <form action="/tasks/archive-completed" method="POST">
+        <button type="submit">Archive All Completed</button>
+    </form>
+
+    <!-- Archive View Link (Requirement 8) -->
+    <p><a href="/archive">View Archive</a></p>
+</body>
+</html>
+
