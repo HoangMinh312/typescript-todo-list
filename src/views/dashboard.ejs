@@ -1,67 +1,84 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Dashboard - Todo App</title>
-</head>
-<body>
-    <h1>Dashboard - <%= username %></h1>
+<div class="space-y-6">
+    <h1 class="text-4xl font-bold text-gray-800">Dashboard</h1>
 
     <!-- Create Task (Requirement 2) -->
-    <form action="/tasks" method="POST">
-        <input type="text" name="title" placeholder="New task" required>
-        <button type="submit">Add Task</button>
-    </form>
+    <div class="bg-white rounded-lg shadow-md p-6">
+        <h2 class="text-xl font-semibold text-gray-700 mb-4">Add New Task</h2>
+        <form action="/tasks" method="POST" class="flex gap-2">
+            <input type="text" name="title" placeholder="What needs to be done?" required 
+                class="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500">
+            <button type="submit" class="bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-2 rounded-lg font-semibold transition">Add Task</button>
+        </form>
+    </div>
 
     <!-- Active Tasks List (Requirements 3, 4, 5, 6) -->
-    <h2>Active Tasks</h2>
-    <ul>
-        <% if (tasks && tasks.length) { %>
-            <% tasks.forEach(function(task, index) { %>
-                <li>
-                    <span><%= task.title %></span>
-                    <span><%= task.completed ? "(Done)" : "" %></span>
+    <div class="bg-white rounded-lg shadow-md p-6">
+        <h2 class="text-2xl font-semibold text-gray-700 mb-4">Active Tasks</h2>
+        <div class="space-y-3">
+            <% if (tasks && tasks.length) { %>
+                <% tasks.forEach(function(task, index) { %>
+                    <div class="flex items-center justify-between bg-gradient-to-r from-gray-50 to-gray-100 p-4 rounded-lg border border-gray-200 hover:border-indigo-300 transition">
+                        <div class="flex-1">
+                            <span class="text-lg font-medium text-gray-800"><%= task.title %></span>
+                            <% if (task.completed) { %>
+                                <span class="ml-2 inline-block bg-green-100 text-green-800 text-sm px-3 py-1 rounded-full">✓ Done</span>
+                            <% } %>
+                        </div>
+                        <div class="flex gap-2">
+                            <!-- Edit (Requirement 3) -->
+                            <form action="/tasks/<%= task.id %>/edit" method="POST" style="display:inline;" class="flex gap-2">
+                                <input type="text" name="title" value="<%= task.title %>" required 
+                                    class="px-2 py-1 text-sm border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-indigo-500">
+                                <button type="submit" class="bg-blue-500 hover:bg-blue-600 text-white text-sm px-3 py-1 rounded transition">Edit</button>
+                            </form>
 
-                    <!-- Edit (Requirement 3) -->
-                    <form action="/tasks/<%= task.id %>/edit" method="POST" style="display:inline;">
-                        <input type="text" name="title" value="<%= task.title %>" required>
-                        <button type="submit">Edit</button>
-                    </form>
+                            <!-- Delete (Requirement 4) -->
+                            <form action="/tasks/<%= task.id %>/delete" method="POST" style="display:inline;">
+                                <button type="submit" class="bg-red-500 hover:bg-red-600 text-white text-sm px-3 py-1 rounded transition">Delete</button>
+                            </form>
 
-                    <!-- Delete (Requirement 4) -->
-                    <form action="/tasks/<%= task.id %>/delete" method="POST" style="display:inline;">
-                        <button type="submit">Delete</button>
-                    </form>
+                            <!-- Toggle Done (Requirement 5) -->
+                            <form action="/tasks/<%= task.id %>/toggle" method="POST" style="display:inline;">
+                                <button type="submit" class="bg-green-500 hover:bg-green-600 text-white text-sm px-3 py-1 rounded transition">
+                                    <%= task.completed ? "Undo" : "Done" %>
+                                </button>
+                            </form>
 
-                    <!-- Toggle Done (Requirement 5) -->
-                    <form action="/tasks/<%= task.id %>/toggle" method="POST" style="display:inline;">
-                        <button type="submit"><%= task.completed ? "Mark Undone" : "Mark Done" %></button>
-                    </form>
+                            <!-- Archive -->
+                            <form action="/tasks/<%= task.id %>/archive" method="POST" style="display:inline;">
+                                <button type="submit" class="bg-gray-500 hover:bg-gray-600 text-white text-sm px-3 py-1 rounded transition">Archive</button>
+                            </form>
 
-                    <!-- Toggle Archived -->
-                    <form action="/tasks/<%= task.id %>/archive" method="POST" style="display:inline;">
-                        <button type="submit">Archive</button>
-                    </form>
-                    <!-- Reorder Up/Down (Requirement 6) -->
-                    <form action="/tasks/<%= task.id %>/move-up" method="POST" style="display:inline;">
-                        <button type="submit" <%= index === 0 ? "disabled" : "" %>>Up</button>
-                    </form>
-                    <form action="/tasks/<%= task.id %>/move-down" method="POST" style="display:inline;">
-                        <button type="submit" <%= index === tasks.length - 1 ? "disabled" : "" %>>Down</button>
-                    </form>
-                </li>
-            <% }); %>
-        <% } else { %>
-            <li>No active tasks.</li>
-        <% } %>
-    </ul>
+                            <!-- Reorder Up/Down (Requirement 6) -->
+                            <form action="/tasks/<%= task.id %>/move-up" method="POST" style="display:inline;">
+                                <button type="submit" <%= index === 0 ? "disabled" : "" %> 
+                                    class="<%= index === 0 ? 'bg-gray-300 text-gray-500 cursor-not-allowed' : 'bg-purple-500 hover:bg-purple-600 text-white transition' %> text-sm px-2 py-1 rounded">↑</button>
+                            </form>
+                            <form action="/tasks/<%= task.id %>/move-down" method="POST" style="display:inline;">
+                                <button type="submit" <%= index === tasks.length - 1 ? "disabled" : "" %>
+                                    class="<%= index === tasks.length - 1 ? 'bg-gray-300 text-gray-500 cursor-not-allowed' : 'bg-purple-500 hover:bg-purple-600 text-white transition' %> text-sm px-2 py-1 rounded">↓</button>
+                            </form>
+                        </div>
+                    </div>
+                <% }); %>
+            <% } else { %>
+                <div class="text-center py-8 text-gray-500">
+                    <p class="text-lg">No active tasks. Create one to get started! 🚀</p>
+                </div>
+            <% } %>
+        </div>
+    </div>
 
     <!-- Archive All Completed (Requirement 7) -->
-    <form action="/tasks/archive-completed" method="POST">
-        <button type="submit">Archive All Completed</button>
-    </form>
+    <div class="flex gap-4">
+        <% if (tasks && tasks.some(t => t.completed)) { %>
+            <form action="/tasks/archive-completed" method="POST">
+                <button type="submit" class="bg-orange-500 hover:bg-orange-600 text-white font-semibold px-6 py-3 rounded-lg transition">Archive All Completed</button>
+            </form>
+        <% } %>
 
-    <!-- Archive View Link (Requirement 8) -->
-    <p><a href="/archive">View Archive</a></p>
-</body>
-</html>
+        <!-- Archive View Link (Requirement 8) -->
+        <a href="/archive" class="bg-indigo-500 hover:bg-indigo-600 text-white font-semibold px-6 py-3 rounded-lg transition">View Archive</a>
+    </div>
+</div>
 

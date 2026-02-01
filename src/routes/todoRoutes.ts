@@ -8,10 +8,16 @@ const router = Router();
 router.use(isAuthenticated);
 
 // Dashboard route
-router.get('/dashboard', todoController.renderDashboard);
+router.get('/dashboard', (req, res) => {
+  res.locals.title = 'Dashboard';
+  todoController.renderDashboard(req, res);
+});
 
 // Archive route
-router.get('/archive', todoController.renderArchive);
+router.get('/archive', (req, res) => {
+  res.locals.title = 'Archive';
+  todoController.renderArchive(req, res);
+});
 
 // Task routes
 router.post('/tasks', todoController.createTask);

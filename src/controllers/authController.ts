@@ -11,6 +11,16 @@ export const register = async (req: Request, res: Response) => {
         if (existingUser) {
             return res.status(400).send("Username already exists.");
         }
+
+        // Validate password length
+        if (password.length < 6) {
+            return res.status(400).send("Password must be at least 6 characters long.");
+        }
+
+        // Validate password contains uppercase, lowercase, and number
+        if (!/[A-Z]/.test(password) || !/[a-z]/.test(password) || !/[0-9]/.test(password)) {
+            return res.status(400).send("Password must contain uppercase, lowercase letters, and numbers.");
+        }
         
         // Hash password and create user
         const passwordHash = await bcrypt.hash(password, 10);

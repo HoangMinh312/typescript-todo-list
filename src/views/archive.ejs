@@ -1,24 +1,26 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Archive - Todo App</title>
-</head>
-<body>
-    <h1>Archived Tasks - <%= username %></h1>
+<div class="space-y-6">
+    <h1 class="text-4xl font-bold text-gray-800">Archived Tasks</h1>
 
-    <ul>
-        <% if (tasks && tasks.length) { %>
-            <% tasks.forEach(function(task) { %>
-                <li>
-                    <span><%= task.title %></span>
-                    <span><%= task.completed ? "(Done)" : "" %></span>
-                </li>
-            <% }); %>
-        <% } else { %>
-            <li>No archived tasks.</li>
-        <% } %>
-    </ul>
+    <div class="bg-white rounded-lg shadow-md p-6">
+        <div class="space-y-3">
+            <% if (tasks && tasks.length) { %>
+                <% tasks.forEach(function(task) { %>
+                    <div class="flex items-center justify-between bg-gradient-to-r from-gray-50 to-gray-100 p-4 rounded-lg border border-gray-200">
+                        <div>
+                            <span class="text-lg font-medium text-gray-700 line-through"><%= task.title %></span>
+                            <% if (task.completed) { %>
+                                <span class="ml-2 inline-block bg-green-100 text-green-800 text-sm px-3 py-1 rounded-full">✓ Completed</span>
+                            <% } %>
+                        </div>
+                    </div>
+                <% }); %>
+            <% } else { %>
+                <div class="text-center py-8 text-gray-500">
+                    <p class="text-lg">No archived tasks yet.</p>
+                </div>
+            <% } %>
+        </div>
+    </div>
 
-    <p><a href="/dashboard">Back to Dashboard</a></p>
-</body>
-</html>
+    <a href="/dashboard" class="inline-block bg-indigo-600 hover:bg-indigo-700 text-white font-semibold px-6 py-3 rounded-lg transition">← Back to Dashboard</a>
+</div>
